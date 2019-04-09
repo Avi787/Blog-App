@@ -48,10 +48,17 @@ class ArticlesController < ApplicationController
   end
   
   def destroy
-    @article.destroy
-    flash[:success] = "Article has been deleted"
-    redirect_to articles_path
+    if @article.user == current_user
+      if @article.destroy
+        flash[:success] = "Article has been deleted"
+        redirect_to articles_path
+      end
+    else
+      flash[:alert] = "You can only delete your own articles."
+      redirect_to root_path
+    end
   end
+  
   
   protected
   
